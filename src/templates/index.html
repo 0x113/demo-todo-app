@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .todo-list {
+            margin-top: 30px;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background-color: #fafafa;
+        }
+
+        .todo-item.completed {
+            background-color: #e8f5e8;
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .todo-title {
+            flex-grow: 1;
+            margin-right: 15px;
+        }
+
+        .todo-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-complete {
+            background-color: #2196F3;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-complete:hover {
+            background-color: #1976D2;
+        }
+
+        .btn-delete {
+            background-color: #f44336;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-delete:hover {
+            background-color: #d32f2f;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+            padding: 40px;
+        }
+
+        .error {
+            color: #f44336;
+            margin-top: 10px;
+        }
+
+        .success {
+            color: #4CAF50;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>My Todo List</h1>
+
+        <form method="POST" action="/">
+            <div class="form-group">
+                <label for="title">Task Name:</label>
+                <input type="text" id="title" name="title" placeholder="Enter a new task..." required>
+            </div>
+            <button type="submit">Add Task</button>
+        </form>
+
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if success %}
+        <div class="success">{{ success }}</div>
+        {% endif %}
+
+        <div class="todo-list">
+            <h2>Tasks</h2>
+            {% if todos and todos | length > 0 %}
+            {% for todo in todos %}
+            <div class="todo-item {% if todo.completed %}completed{% endif %}">
+                <div class="todo-title">{{ todo.title }}</div>
+                <div class="todo-actions">
+                    {% if not todo.completed %}
+                    <form method="POST" action="/complete/{{ todo.id }}" style="display: inline;">
+                        <button type="submit" class="btn-complete">Complete</button>
+                    </form>
+                    {% endif %}
+                    <form method="POST" action="/delete/{{ todo.id }}" style="display: inline;">
+                        <button type="submit" class="btn-delete">Delete</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty-state">
+                No tasks yet. Add one above to get started!
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,4 +1,5 @@
 use actix_web::{App, HttpServer, web};
+use tera::Tera;
 use todo_app_rs::{common, todo};
 use tracing::info;
 
@@ -47,11 +48,27 @@ async fn main() -> std::io::Result<()> {
 
     let todo_service = todo::service::TodoService::new(db_pool).await;
 
+    // Initialize Tera
+    let tera = match Tera::new("src/templates/**/*") {
+        Ok(t) => t,
+        Err(e) => {
+            println!("Parsing error(s): {}", e);
+            ::std::process::exit(1);
+        }
+    };
+
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(common::state::AppState {
                 todo_service: todo_service.clone(),
             }))
+            .app_data(web::Data::new(tera.clone()))
+            // Web UI routes
+            .service(todo::web_handlers::index)
+            .service(todo::web_handlers::create_todo)
+            .service(todo::web_handlers::complete_todo)
+            .service(todo::web_handlers::delete_todo)
+            // API routes
             .service(todo::handlers::create)
             .service(todo::handlers::list)
             .service(todo::handlers::mark_as_done)

@@ -1,13 +1,14 @@
 # Todo App RS
 
-A simple Rust-based REST API todo application built with Actix Web and PostgreSQL. This project serves as a demonstration of basic CRUD operations and modern Rust web development practices.
+A simple Rust-based todo application built with Actix Web and PostgreSQL. This project serves as a demonstration of basic CRUD operations and modern Rust web development practices, featuring both a REST API and a web UI.
 
 ⚠️ **Note**: This is a simple demonstration project and is not intended for production use.
 
 ## Features
 
+- 🌐 Modern web UI for managing todos
 - ✅ Create new todo items
-- 📋 List all todo items
+- 📋 List all todo items  
 - ✅ Mark todo items as completed
 - 🗑️ Delete todo items
 - 🗄️ PostgreSQL database persistence
@@ -18,6 +19,7 @@ A simple Rust-based REST API todo application built with Actix Web and PostgreSQ
 
 - **Language**: Rust 2024 Edition
 - **Web Framework**: Actix Web 4.x
+- **Template Engine**: Tera
 - **Database**: PostgreSQL with SQLx
 - **Serialization**: Serde
 - **Async Runtime**: Tokio
@@ -30,9 +32,12 @@ A simple Rust-based REST API todo application built with Actix Web and PostgreSQ
 src/
 ├── main.rs              # Application entry point
 ├── lib.rs               # Library exports
+├── templates/           # Tera HTML templates
+│   └── index.html       # Main UI template
 ├── common/              # Shared utilities and state
 └── todo/                # Todo module
-    ├── handlers.rs      # HTTP request handlers
+    ├── handlers.rs      # API request handlers
+    ├── web_handlers.rs  # Web UI handlers
     ├── service.rs       # Business logic
     ├── repository.rs    # Database operations
     └── model.rs         # Data models
@@ -90,6 +95,10 @@ DB_NAME=todo_app
    cargo run
    ```
 
+5. **Access the application**
+   - **Web UI**: http://localhost:8080
+   - **REST API**: http://localhost:8080/api/v1
+
 ### Option 2: Docker
 
 ```bash
@@ -108,9 +117,21 @@ docker run -p 8080:8080 \
   todo-app-rs
 ```
 
+## Web UI
+
+The application provides a modern web interface accessible at the root URL:
+
+- **URL**: http://localhost:8080
+- **Features**: 
+  - Add new todos with a simple form
+  - View all todos in a clean list
+  - Mark todos as completed
+  - Delete todos
+  - Real-time updates after each action
+
 ## API Documentation
 
-The application exposes a REST API with the following endpoints:
+The application also exposes a REST API with the following endpoints:
 
 ### Base URL
 ```
