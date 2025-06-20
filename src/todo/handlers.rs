@@ -1,4 +1,4 @@
-use crate::common::state::AppState;
+use crate::utils::state::AppState;
 use actix_web::{HttpResponse, delete, get, post, web};
 use serde::{Deserialize, Serialize};
 

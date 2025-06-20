@@ -139,7 +139,7 @@
 
 <body>
     <div class="container">
-        <h1>My Todo List</h1>
+        <h1>Demo Todo App</h1>
 
         <form method="POST" action="/">
             <div class="form-group">
@@ -180,6 +180,19 @@
                 No tasks yet. Add one above to get started!
             </div>
             {% endif %}
+        </div>
+
+        <div class="kubernetes-info">
+            <h2>Kubernetes Info</h2>
+            <p>
+                <strong>Namespace:</strong> {{ namespace }}
+            </p>
+            <p>
+                <strong>Pod Name:</strong> {{ pod_name }}
+            </p>
+            <p>
+                <strong>Node Name:</strong> {{ node_name }}
+            </p>
         </div>
     </div>
 </body>

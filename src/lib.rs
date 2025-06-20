@@ -6,6 +6,7 @@ pub mod todo {
     pub mod web_handlers;
 }
 
-pub mod common {
+pub mod utils {
+    pub mod env;
     pub mod state;
 }

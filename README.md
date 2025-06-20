@@ -1,18 +1,19 @@
 # Todo App RS
 
-A simple Rust-based todo application built with Actix Web and PostgreSQL. This project serves as a demonstration of basic CRUD operations and modern Rust web development practices, featuring both a REST API and a web UI.
+A simple Rust-based todo application built with Actix Web and PostgreSQL.
 
-⚠️ **Note**: This is a simple demonstration project and is not intended for production use.
+⚠️ **Important**: This is a **demonstration project** created for learning purposes. It's not intended for production use and serves as an example of building a simple web application with Rust, Actix Web, and PostgreSQL, including containerization and Kubernetes deployment.
 
 ## Features
 
-- 🌐 Modern web UI for managing todos
+- 🌐 UI for managing todos
 - ✅ Create new todo items
 - 📋 List all todo items  
 - ✅ Mark todo items as completed
 - 🗑️ Delete todo items
 - 🗄️ PostgreSQL database persistence
 - 🐳 Docker containerization
+- ☸️ Kubernetes deployment ready
 - 📊 Structured logging with tracing
 
 ## Tech Stack
@@ -23,7 +24,7 @@ A simple Rust-based todo application built with Actix Web and PostgreSQL. This p
 - **Database**: PostgreSQL with SQLx
 - **Serialization**: Serde
 - **Async Runtime**: Tokio
-- **Logging**: Tracing + Tracing Subscriber
+- **Logging**: Tracing
 - **Containerization**: Docker
 
 ## Project Structure
@@ -48,6 +49,7 @@ src/
 - Rust 1.70+ (with Cargo)
 - PostgreSQL 12+
 - Docker & Docker Compose (optional)
+- Kubernetes cluster (optional, for K8s deployment)
 
 ## Environment Variables
 
@@ -116,6 +118,85 @@ docker run -p 8080:8080 \
   -e DB_NAME=todo_app \
   todo-app-rs
 ```
+
+### Option 3: Kubernetes Deployment
+
+The project includes complete Kubernetes manifests for deployment in a cluster.
+
+#### Prerequisites for Kubernetes deployment:
+- Access to a Kubernetes cluster (local or cloud)
+- `kubectl` configured to access your cluster
+- Docker image built and available to your cluster
+
+#### Deploy to Kubernetes:
+
+1. **Build and load the Docker image** (for local clusters like minikube/kind):
+   ```bash
+   # Build the image
+   docker build -t todo-app-rs:latest .
+   
+   # For minikube
+   minikube image load todo-app-rs:latest
+   
+   # For kind
+   kind load docker-image todo-app-rs:latest
+   ```
+
+2. **Update database credentials** in `kubernetes/postgres-secret.yaml`:
+   ```bash
+   # Edit the secret file with your database credentials
+   # Note: Values should be base64 encoded
+   kubectl create secret generic postgres-secret \
+     --from-literal=POSTGRES_USER=your_db_user \
+     --from-literal=POSTGRES_PASSWORD=your_db_password \
+     --dry-run=client -o yaml > kubernetes/postgres-secret.yaml
+   ```
+
+3. **Deploy using Kustomize**:
+   ```bash
+   # Apply all Kubernetes resources
+   kubectl apply -k kubernetes/
+   ```
+
+4. **Verify deployment**:
+   ```bash
+   # Check if pods are running
+   kubectl get pods -n todo-app
+   
+   # Check services
+   kubectl get services -n todo-app
+   ```
+
+5. **Access the application**:
+   ```bash
+   # Port forward to access locally
+   kubectl port-forward -n todo-app service/todo-app-service 8080:80
+   
+   # Or get the external IP (if using LoadBalancer)
+   kubectl get service todo-app-service -n todo-app
+   ```
+
+#### Kubernetes Resources Included:
+- **Namespace**: `todo-app` namespace for resource isolation
+- **PostgreSQL**: Complete PostgreSQL deployment with persistent volume
+- **Todo App**: Application deployment with 2 replicas
+- **ConfigMap**: Environment configuration
+- **Secret**: Database credentials
+- **Services**: ClusterIP services for internal communication
+- **PVC**: Persistent volume claim for PostgreSQL data
+
+#### Cleanup:
+```bash
+# Remove all resources
+kubectl delete -k kubernetes/
+```
+
+**Note**: The Kubernetes configuration is set up for demonstration purposes with `imagePullPolicy: Never` for local development. For production deployments, you would need to:
+- Push the Docker image to a container registry
+- Update the image reference in the deployment
+- Configure appropriate resource limits and requests
+- Set up proper secrets management
+- Configure ingress controllers for external access
 
 ## Web UI
 
@@ -231,4 +312,12 @@ This project is intended for demonstration purposes only.
 
 ## Contributing
 
-This is a demo project. Feel free to fork and experiment with it for learning purposes.
+This is a **demonstration project** created for educational purposes. Feel free to fork and experiment with it for learning about:
+- Rust web development with Actix Web
+- PostgreSQL integration with SQLx
+- Docker containerization
+- Kubernetes deployment patterns
+- REST API design
+- HTML templating with Tera
+
+Pull requests and improvements are welcome for educational enhancements!

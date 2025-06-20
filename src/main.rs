@@ -1,6 +1,6 @@
 use actix_web::{App, HttpServer, web};
 use tera::Tera;
-use todo_app_rs::{common, todo};
+use todo_app_rs::{todo, utils};
 use tracing::info;
 
 async fn init_tables(db_pool: &sqlx::PgPool) {
@@ -59,7 +59,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
-            .app_data(web::Data::new(common::state::AppState {
+            .app_data(web::Data::new(utils::state::AppState {
                 todo_service: todo_service.clone(),
             }))
             .app_data(web::Data::new(tera.clone()))
